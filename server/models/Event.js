@@ -1,28 +1,15 @@
 import mongoose from 'mongoose';
 
 const eventSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true,
-    trim: true
-  },
-  description: {
-    type: String,
-    required: true
-  },
+  title: { type: String, required: true, trim: true },
+  description: { type: String, required: true },
   category: {
     type: String,
     required: true,
     enum: ['Music', 'Sports', 'Conference', 'Workshop', 'Festival', 'Theater', 'Other']
   },
-  date: {
-    type: Date,
-    required: true
-  },
-  time: {
-    type: String,
-    required: true
-  },
+  date: { type: Date, required: true },
+  time: { type: String, required: true },
   location: {
     venue: { type: String, required: true },
     address: { type: String, required: true },
@@ -49,22 +36,21 @@ const eventSchema = new mongoose.Schema({
     enum: ['draft', 'published', 'cancelled', 'completed'],
     default: 'published'
   },
-  totalSeats: {
-    type: Number,
-    required: true
-  },
-  availableSeats: {
-    type: Number,
-    required: true
-  },
-  featured: {
-    type: Boolean,
-    default: false
-  }
-}, {
-  timestamps: true
-});
+  totalSeats: { type: Number, required: true },
+  availableSeats: { type: Number, required: true },
+
+  // ✅ ADD THIS
+  reviews: [
+    {
+      user: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+      rating: { type: Number, min: 1, max: 5 },
+      comment: String,
+      createdAt: { type: Date, default: Date.now }
+    }
+  ],
+
+  featured: { type: Boolean, default: false }
+}, { timestamps: true });
 
 const Event = mongoose.model('Event', eventSchema);
-
 export default Event;
